@@ -1,11 +1,11 @@
 from question_model import Question
-from data import question_data
+from data import new_question_data
 from quiz_brain import QuizBrain
 
 question_bank = []
-for question in question_data:
-  text = question["text"]
-  answer = question["answer"]
+for question in new_question_data:
+  text = question["question"].replace("&quot;", "'").replace("&#039;", "'")
+  answer = question["correct_answer"]
   question = Question(text, answer)
   question_bank.append(question)
 
