@@ -37,11 +37,11 @@ while game_on:
         writer.write(answer_state, font=("Arial", 10, "bold"))
     elif answer_state == "Exit":
         game_on = False
-        all_states = states.state.to_list()
-        missing_states = []
-        for state in all_states:
-            if state not in correct_guessed:
-                missing_states.append(state)
+        # all_states = states.state.to_list()
+        missing_states = [state for state in states.state.to_list() if state not in correct_guessed]
+        # for state in all_states:
+        #     if state not in correct_guessed:
+        #         missing_states.append(state)
 
         exit_data = pandas.DataFrame(missing_states)
         exit_data.to_csv("./states_to_learn.csv")
