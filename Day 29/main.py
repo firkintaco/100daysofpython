@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 import random
 from pyperclip import copy
+import json
 DEFAULT_EMAIL = "testi@ukko.fi"
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
@@ -22,12 +23,31 @@ def generate_password():
     messagebox.showinfo(title="Copied", message="Copied to clipboard!")
     password_box.delete(0,END)
     password_box.insert(END, password)
+# --------------------------- SEARCH PASSWORD ------------------------------ #
+def search_password():
+    website = website_box.get()
+
+    with open("./passwords.json") as pw_file:
+        data = json.load(pw_file)
+    try:
+        website_data = data.get(website)
+        messagebox.showinfo(title=website, message=f"Email: {website_data['email']}\nPassword: {website_data['password']}")
+    except TypeError:
+        messagebox.showinfo(title="Not Found", message="No data found")
+    except FileNotFoundError:
+        messagebox.showerror(title="No data file", message="No data file found.")
+
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save_password():
     website = website_box.get()
     email = email_box.get()
     password = password_box.get()
-    formatted_pw = f"{website} | {email} | {password}\n"
+    data = {
+        website: {
+            "email": email,
+            "password": password
+        }
+    }
 
 
     if len(website) < 3 or len(password) <3:
@@ -36,10 +56,26 @@ def save_password():
         confirm = messagebox.askokcancel(title=website,
                                          message=f"These are the details entered:\nEmail: {email}\nPassword: {password}\nIs it ok to save?")
         if confirm:
-            with open("./passwords.txt", "a") as pw_file:
-                pw_file.write(formatted_pw)
-                website_box.delete(0,END)
-                password_box.delete(0,END)
+            try:
+                with open("./passwords.json", "r") as pw_file:
+                    # pw_file.write(formatted_pw)
+                    # json.dump(data, pw_file, indent=4)
+                    # Reading old data
+                    json_data = json.load(pw_file)
+
+            except FileNotFoundError:
+                with open("./passwords.json","w") as pw_file:
+                    json.dump(data, pw_file, indent=4)
+
+            else:
+                # Updating old data with new data
+                json_data.update(data)
+                with open('./passwords.json', 'w') as pw_file:
+                    # Saving updated data
+                    json.dump(json_data, pw_file, indent=4)
+            finally:
+                website_box.delete(0, END)
+                password_box.delete(0, END)
 # ---------------------------- UI SETUP ------------------------------- #
 
 window = Tk()
@@ -54,9 +90,13 @@ logo.grid(column=1, row=0)
 # TODO 1: Website label and textbox
 website_label = Label(text="Website:")
 website_label.grid(column=0, row=1)
-website_box = Entry(width=51)
-website_box.grid(column=1, row=1, columnspan=2)
+website_box = Entry(width=33)
+website_box.grid(column=1, row=1)
 website_box.focus()
+# TODO 6: Search website
+search_website = Button(text="Search", command=search_password, width=14)
+search_website.grid(column=2, row=1)
+
 
 #TODO 2: Email/username label and textbox
 email_label = Label(text="Email/Username:")
