@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Guess Page</title>
+    <link rel="stylesheet" href="/static/gender.css" />
+</head>
+<body>
+{% if data %}
+<section>
+<h1>Hey {{data["name"].title()}},</h1>
+<h3>I think you are {{gender}},</h3>
+<h3>And maybe {{data["age"]}} years old.</h3>
+{% else %}
+<h1>Invalid params</h1>
+{%endif%}
+    </section>
+</body>
+</html>
