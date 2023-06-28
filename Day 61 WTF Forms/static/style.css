@@ -1,0 +1,15 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+}
+.container {
+    background-color: grey;
+    padding: 2rem;
+    border-radius: 1rem;
+    color: white;
+}
+span {
+    color: red;
+}
