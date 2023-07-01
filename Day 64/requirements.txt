@@ -1,0 +1,7 @@
+Flask~=2.3.2
+Bootstrap-Flask
+Jinja2
+Flask-WTF
+Flask-SQLAlchemy
+requests~=2.31.0
+WTForms~=3.0.1
